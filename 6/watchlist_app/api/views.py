@@ -9,7 +9,45 @@ from rest_framework.views import APIView
 
 
 
-# API VIEW CLASS
+class StreamDetailAV(APIView):
+    def get(self,request,id):
+        try:
+            movie=StreamPlatform.objects.get(id=id)
+        except movie.DoesNotExist:
+            return Response( {'error':'Movie not found.'} ,status=status.HTTP_404_NOT_FOUND )
+        serializer=StreamPlatformSerializer(movie)
+        return Response(serializer.data)
+    
+    
+    def put(self,request,id):
+        try:
+            movie=StreamPlatform.objects.get(id=id)
+        except movie.DoesNotExist:
+            return Response( {'error':'Movie not found.'} ,status=status.HTTP_404_NOT_FOUND )
+        
+        serializer=StreamPlatformSerializer(movie,data=  request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'error':'Bad Request.' }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,id):
+        try:
+            movie=StreamPlatform.objects.get(id=id)
+        except movie.DoesNotExist:
+            return Response( {'error':'Movie not found.'} ,status=status.HTTP_404_NOT_FOUND )    
+        movie.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+
+        
+            
+    
+
+
+
+
 class StreamPlatformAV(APIView):
     def get(self,request):
         platform=StreamPlatform.objects.all()
@@ -24,29 +62,6 @@ class StreamPlatformAV(APIView):
         else:
             return Response(serializer.errors)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# API VIEW CLASS
 class WatchListAV(APIView):
     def get(self,request):
         movies=WatchList.objects.all()
