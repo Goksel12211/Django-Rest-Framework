@@ -8,7 +8,7 @@ from rest_framework import generics,permissions
 class BookListCreateAPIView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer 
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 class BookDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
